@@ -1,124 +1,62 @@
-import { useState } from 'react'
-import { WelcomeScreen } from './components/WelcomeScreen'
-import { TopBar } from './components/TopBar'
+import { useEffect, useState } from 'react'
+import { LangProvider } from './i18n'
+import { Acct, Kid, Attempt, loadDb, saveDb, getSess, setSess } from './store'
+import { CHARACTERS, ShopItem } from './data/gameData'
+import { AuthScreen } from './components/AuthScreen'
+import { ProfilePicker } from './components/ProfilePicker'
+import { Companion } from './components/Companion'
+import { TopBar, Tab } from './components/TopBar'
 import { MapView } from './components/MapView'
-import { WorldActivities } from './components/WorldActivities'
+import { Quiz } from './components/Quiz'
 import { ShopView } from './components/ShopView'
+import { ProgressView } from './components/ProgressView'
 import { AchievementsView } from './components/AchievementsView'
-import { CHARACTERS, Character, SHOP_ITEMS, INITIAL_ACHIEVEMENTS, Achievement, ShopItem, UnlockedItems } from './data/gameData'
 
 export default function App() {
-  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null)
-  const [activeTab, setActiveTab] = useState<'map' | 'shop' | 'achievements'>('map')
-  const [activeWorldId, setActiveWorldId] = useState<string | null>(null)
+  return <LangProvider><Root /></LangProvider>
+}
 
-  // Game stats
-  const [stars, setStars] = useState<number>(12)
-  const [coins, setCoins] = useState<number>(50)
-  const [completedCount, setCompletedCount] = useState<number>(3)
+function Root() {
+  const [db, setDb] = useState<Acct[]>(loadDb)
+  const [sid, setSid] = useState<string | null>(getSess)
+  const [kidId, setKidId] = useState<string | null>(null)
+  const [tab, setTab] = useState<Tab>('map')
+  const [world, setWorld] = useState<string | null>(null)
+  useEffect(() => saveDb(db), [db])
 
-  // Unlocked items
-  const [unlockedItems, setUnlockedItems] = useState<UnlockedItems>({
-    characters: ['dino', 'luna', 'pico', 'pandi', 'leo'],
-    accessories: [],
-    backgrounds: [],
-    equippedAccessory: {},
-    activeBackground: 'default'
-  })
+  const acct = db.find((a) => a.id === sid)
+  const kid = acct?.kids.find((k) => k.id === kidId)
+  const upAcct = (fn: (a: Acct) => Acct) => setDb((d) => d.map((a) => (a.id === sid ? fn(a) : a)))
+  const upKid = (fn: (k: Kid) => Kid) => upAcct((a) => ({ ...a, kids: a.kids.map((k) => (k.id === kidId ? fn(k) : k)) }))
 
-  // Achievements
-  const [achievements, setAchievements] = useState<Achievement[]>(INITIAL_ACHIEVEMENTS)
-
-  const handleSelectCharacter = (character: Character) => {
-    setSelectedCharacter(character)
+  if (!acct) {
+    return <AuthScreen db={db} onAuth={(a, isNew) => { if (isNew) setDb((d) => [...d, a]); setSess(a.id); setSid(a.id) }} />
+  }
+  if (!kid) {
+    return <ProfilePicker acct={acct} onPick={(k) => { setKidId(k.id); setTab('map'); setWorld(null) }}
+      onAdd={(k) => upAcct((a) => ({ ...a, kids: [...a.kids, k] }))} onOut={() => { setSess(null); setSid(null) }} />
   }
 
-  const handleRewardEarned = (earnedStars: number, earnedCoins: number) => {
-    setStars((prev) => prev + earnedStars)
-    setCoins((prev) => prev + earnedCoins)
-    setCompletedCount((prev) => prev + 1)
+  const char = CHARACTERS.find((c) => c.id === kid.char)!
+  const buy = (it: ShopItem) => kid.coins >= it.price && upKid((k) => ({
+    ...k, coins: k.coins - it.price,
+    acc: it.kind === 'acc' ? [...k.acc, it.id] : k.acc, bgs: it.kind === 'bg' ? [...k.bgs, it.id] : k.bgs,
+  }))
+  const equip = (it: ShopItem) => upKid((k) => it.kind === 'acc' ? { ...k, eqAcc: k.eqAcc === it.id ? '' : it.id } : { ...k, bg: k.bg === it.id ? '' : it.id })
 
-    // Update achievement progress
-    setAchievements((prev) =>
-      prev.map((ach) => {
-        const newProgress = Math.min(ach.progress + 1, ach.maxProgress)
-        return {
-          ...ach,
-          progress: newProgress,
-          unlocked: newProgress >= ach.maxProgress
-        }
-      })
-    )
-  }
-
-  const handleBuyItem = (item: ShopItem) => {
-    if (coins >= item.price) {
-      setCoins((prev) => prev - item.price)
-      setUnlockedItems((prev) => ({
-        ...prev,
-        accessories: item.category === 'accessory' ? [...prev.accessories, item.id] : prev.accessories,
-        backgrounds: item.category === 'background' ? [...prev.backgrounds, item.id] : prev.backgrounds
-      }))
-    }
-  }
-
-  const handleEquipItem = (item: ShopItem) => {
-    // Visual feedback for equipping
-  }
-
-  // 1. If no character selected yet -> Welcome Screen
-  if (!selectedCharacter) {
-    return <WelcomeScreen onSelectCharacter={handleSelectCharacter} />
-  }
-
-  // 2. Main Game Interface
   return (
-    <div className="min-h-screen bg-slate-100 font-sans select-none">
-      <TopBar
-        character={selectedCharacter}
-        stars={stars}
-        coins={coins}
-        activeTab={activeTab}
-        onTabChange={(tab) => {
-          setActiveTab(tab)
-          setActiveWorldId(null)
-        }}
-        onChangeCharacter={() => setSelectedCharacter(null)}
-      />
-
-      <main className="w-full">
-        {activeWorldId ? (
-          <WorldActivities
-            worldId={activeWorldId}
-            character={selectedCharacter}
-            onBackToMap={() => setActiveWorldId(null)}
-            onRewardEarned={handleRewardEarned}
-          />
-        ) : (
-          <>
-            {activeTab === 'map' && (
-              <MapView
-                character={selectedCharacter}
-                completedCount={completedCount}
-                onSelectWorld={(worldId) => setActiveWorldId(worldId)}
-              />
-            )}
-
-            {activeTab === 'shop' && (
-              <ShopView
-                coins={coins}
-                unlockedItems={unlockedItems}
-                onBuyItem={handleBuyItem}
-                onEquipItem={handleEquipItem}
-              />
-            )}
-
-            {activeTab === 'achievements' && (
-              <AchievementsView achievements={achievements} stars={stars} />
-            )}
-          </>
-        )}
-      </main>
-    </div>
+    <Companion key={kid.id} kid={kid} char={char}>
+      <div className="min-h-screen bg-slate-100">
+        <TopBar kid={kid} char={char} tab={tab} onTab={(t) => { setTab(t); setWorld(null) }} onSwitch={() => setKidId(null)} />
+        {world ? (
+          <Quiz key={world} world={world} kid={kid} onBack={() => setWorld(null)}
+            onAttempt={(a: Attempt) => upKid((k) => ({ ...k, attempts: [...k.attempts, a] }))}
+            onFinish={(stars, coins) => upKid((k) => ({ ...k, stars: k.stars + stars, coins: k.coins + coins }))} />
+        ) : tab === 'map' ? <MapView kid={kid} onPick={setWorld} />
+          : tab === 'shop' ? <ShopView kid={kid} onBuy={buy} onEquip={equip} />
+          : tab === 'prog' ? <ProgressView kid={kid} />
+          : <AchievementsView kid={kid} />}
+      </div>
+    </Companion>
   )
 }
