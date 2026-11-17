@@ -4,6 +4,7 @@ import { useI18n, LangSwitch } from '../i18n'
 import { Acct, Kid, newKid } from '../store'
 import { CHARACTERS } from '../data/gameData'
 import { ProgressView } from './ProgressView'
+import { CharacterAvatar } from './CharacterAvatar'
 
 export function ProfilePicker({ acct, onPick, onAdd, onOut }: { acct: Acct; onPick: (k: Kid) => void; onAdd: (k: Kid) => void; onOut: () => void }) {
   const { t } = useI18n()
@@ -14,7 +15,7 @@ export function ProfilePicker({ acct, onPick, onAdd, onOut }: { acct: Acct; onPi
   const [view, setView] = useState<Kid | null>(null)
 
   if (view) return <ProgressView kid={view} onBack={() => setView(null)} />
-  const emoji = (id: string) => CHARACTERS.find((c) => c.id === id)?.emoji
+  const character = (id: string) => CHARACTERS.find((item) => item.id === id) ?? CHARACTERS[0]
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-300 via-indigo-200 to-purple-300 p-4 sm:p-8">
@@ -29,7 +30,7 @@ export function ProfilePicker({ acct, onPick, onAdd, onOut }: { acct: Acct; onPi
           {acct.kids.map((k) => (
             <div key={k.id} className="relative bg-white rounded-3xl p-4 border-4 border-yellow-300 shadow-xl text-center hover:scale-105 transition">
               <button onClick={() => onPick(k)} className="w-full cursor-pointer">
-                <div className="text-6xl animate-bounce-gentle">{emoji(k.char)}</div>
+                <CharacterAvatar character={character(k.char)} className="mx-auto h-16 w-16 animate-bounce-gentle" />
                 <p className="text-2xl font-black font-fredoka text-slate-800 mt-1">{k.name}</p>
                 <p className="text-sm font-bold text-slate-500">{k.age} · ⭐ {k.stars}</p>
               </button>
@@ -59,7 +60,7 @@ export function ProfilePicker({ acct, onPick, onAdd, onOut }: { acct: Acct; onPi
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
                 {CHARACTERS.map((c) => (
                   <button key={c.id} onClick={() => setChar(c.id)} className={`rounded-2xl p-2 bg-gradient-to-br ${c.grad} cursor-pointer transition ${char === c.id ? 'ring-4 ring-yellow-300 scale-110' : 'opacity-80'}`}>
-                    <div className="text-4xl">{c.emoji}</div>
+                    <CharacterAvatar character={c} className="mx-auto h-12 w-12" />
                     <div className="text-white text-xs font-black">{c.name}</div>
                   </button>
                 ))}

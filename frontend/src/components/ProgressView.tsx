@@ -3,6 +3,7 @@ import { useI18n } from '../i18n'
 import { Attempt, Kid } from '../store'
 import { CHARACTERS } from '../data/gameData'
 import { WORLDS } from './MapView'
+import { CharacterAvatar } from './CharacterAvatar'
 
 const pct = (x: Attempt[]) => (x.length ? Math.round((100 * x.filter((v) => v.ok).length) / x.length) : 0)
 
@@ -49,7 +50,10 @@ export function ProgressView({ kid, onBack }: { kid: Kid; onBack?: () => void })
           {onBack ? <button onClick={onBack} className="flex items-center gap-2 bg-white px-4 py-2 rounded-2xl font-extrabold border-2 border-slate-300 cursor-pointer"><ArrowLeft className="w-4 h-4" />{t('back')}</button> : <span />}
           <button onClick={csv} className="flex items-center gap-2 bg-white px-4 py-2 rounded-2xl font-extrabold border-2 border-slate-300 cursor-pointer"><Download className="w-4 h-4" />{t('csv')}</button>
         </div>
-        <h1 className="text-3xl font-black font-fredoka text-purple-950">{CHARACTERS.find((c) => c.id === kid.char)?.emoji} {kid.name} · {t('prog')}</h1>
+        <h1 className="flex items-center gap-2 text-3xl font-black font-fredoka text-purple-950">
+          <CharacterAvatar character={CHARACTERS.find((item) => item.id === kid.char) ?? CHARACTERS[0]} className="h-12 w-12" />
+          {kid.name} · {t('prog')}
+        </h1>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {stat(a.length, t('tries'), 'bg-sky-100 border-sky-300 text-sky-900')}
