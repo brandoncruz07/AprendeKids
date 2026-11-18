@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import { Character } from '../data/gameData'
+import { Character, ShopItem } from '../data/gameData'
 
 const COLORS: Record<string, { body: string; light: string; dark: string; accent: string }> = {
   dino: { body: '#31c48d', light: '#b8f3d9', dark: '#087f5b', accent: '#fde68a' },
@@ -16,12 +16,23 @@ const COLORS: Record<string, { body: string; light: string; dark: string; accent
 
 export type AvatarGesture = 'idle' | 'talk' | 'excited'
 
-export function CharacterAvatar({ character, className = '', decorative = true, speaking = false, gesture = 'idle' }: {
+// Sizes use the SVG viewBox units so accessories stay proportional at every avatar size.
+const ACCESSORY_POSITION: Record<NonNullable<ShopItem['placement']>, { x: number; y: number; size: number }> = {
+  headTop: { x: 60, y: 27, size: 42 },
+  forehead: { x: 60, y: 43, size: 38 },
+  eyes: { x: 60, y: 62, size: 43 },
+  ears: { x: 60, y: 58, size: 44 },
+  neck: { x: 60, y: 98, size: 39 },
+  back: { x: 96, y: 105, size: 39 }
+}
+
+export function CharacterAvatar({ character, className = '', decorative = true, speaking = false, gesture = 'idle', accessory }: {
   character: Character
   className?: string
   decorative?: boolean
   speaking?: boolean
   gesture?: AvatarGesture
+  accessory?: ShopItem
 }) {
   const rawId = useId()
   const gradientId = `avatar-${rawId.replace(/[^a-zA-Z0-9_-]/g, '')}`
@@ -117,6 +128,17 @@ export function CharacterAvatar({ character, className = '', decorative = true, 
         : <path d="M52 77c4 5 12 5 16 0" fill="none" stroke="#7c2d12" strokeWidth="2.5" strokeLinecap="round" />}
       <ellipse cx="39" cy="72" rx="5" ry="3" fill={colors.accent} opacity=".6" />
       <ellipse cx="81" cy="72" rx="5" ry="3" fill={colors.accent} opacity=".6" />
+      {accessory?.placement && (
+        <text
+          x={ACCESSORY_POSITION[accessory.placement].x}
+          y={ACCESSORY_POSITION[accessory.placement].y}
+          fontSize={ACCESSORY_POSITION[accessory.placement].size}
+          textAnchor="middle"
+          dominantBaseline="central"
+        >
+          {accessory.icon}
+        </text>
+      )}
     </svg>
   )
 }

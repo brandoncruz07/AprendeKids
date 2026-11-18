@@ -1,6 +1,6 @@
 import { Coins, Map as MapIcon, Settings2, ShoppingBag, Star, TrendingUp, Trophy } from 'lucide-react'
 import { useI18n, LangSwitch } from '../i18n'
-import { Character } from '../data/gameData'
+import { Character, SHOP_ITEMS } from '../data/gameData'
 import { Kid } from '../store'
 import { CharacterAvatar } from './CharacterAvatar'
 
@@ -21,6 +21,7 @@ export function TopBar({ kid, char, tab, onTab, onSwitch }: {
   onSwitch: () => void
 }) {
   const { t } = useI18n()
+  const accessory = SHOP_ITEMS.find((item) => item.kind === 'acc' && item.id === kid.eqAcc)
   return (
     <header className="sticky top-0 z-40 border-b-4 border-yellow-300 bg-white/90 px-3 py-2 shadow-md backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2">
@@ -30,7 +31,7 @@ export function TopBar({ kid, char, tab, onTab, onSwitch }: {
           aria-label={`Cambiar acompañante de ${kid.name}`}
           className="flex items-center gap-2 rounded-2xl border-2 border-yellow-400 bg-yellow-100 px-3 py-1.5 font-black text-amber-950"
         >
-          <CharacterAvatar character={char} className="h-9 w-9 animate-bounce-gentle" />{kid.name}
+          <CharacterAvatar character={char} className="h-9 w-9 animate-bounce-gentle" accessory={accessory} />{kid.name}
         </button>
         <nav className="flex gap-1.5" aria-label="Navegación principal">
           {TABS.map(([id, Icon, color]) => (

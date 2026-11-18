@@ -1,13 +1,13 @@
 # AprendeKids
 
 Aplicación educativa infantil con perfiles y progreso guardados en MongoDB,
-cuentas adultas y una API privada para el acompañante de IA.
+cuentas adultas y un acompañante virtual local con conversaciones preparadas.
 
 ## Estructura
 
 ```text
 frontend/    Aplicación React/Vite, juegos, pantallas y recursos
-backend/     API Node, autenticación, sesiones, MongoDB y lógica de IA
+backend/     API Node, autenticación, sesiones, MongoDB y conversaciones locales
 .env         Configuración local privada (no se versiona)
 ```
 
@@ -33,8 +33,12 @@ de AprendeKids, se recomienda usar una base llamada `aprendekids`.
 4. Desde la raíz del proyecto, crea tu archivo privado de entorno:
 
    ```powershell
-   Copy-Item .env.example .env
+   if (!(Test-Path .env)) { Copy-Item .env.example .env }
    ```
+
+   Hazlo solo la primera vez. Si el archivo `.env` ya está configurado,
+   consérvalo: el proyecto reutiliza la misma URI y base de datos cada vez que
+   inicias el backend; no necesitas crear de nuevo la base ni repetir Atlas.
 
 5. Abre `.env` y pon la URI en `MONGODB_URI`. Usa `aprendekids` como nombre de
    base de datos en la ruta de la URI, antes de `?`, por ejemplo:
@@ -65,8 +69,16 @@ npm run dev
 
 Abre `http://127.0.0.1:5173`. La interfaz envía las llamadas `/api` al backend.
 Comprueba la conexión visitando `http://127.0.0.1:5173/api/health`; debe devolver
-`"dbAvailable":true`. Si devuelve `false`, revisa `MONGODB_URI` y que la IP de
-Atlas esté permitida.
+`"dbAvailable":true` y `"companionAvailable":true`. Si la base de datos no está
+disponible, revisa `MONGODB_URI` y que la IP de Atlas esté permitida.
+
+### Modo de prueba sin backend
+
+En el acceso, selecciona **Entrar en modo de prueba** para usar perfiles de
+muestra y explorar los juegos, tienda y logros sin llamadas al backend. Los
+cambios se guardan en el almacenamiento local del navegador, no en MongoDB.
+El acompañante comienza bloqueado; desde Ajustes, usa la contraseña de prueba
+`demo12345678` para simular la aprobación adulta y habilitarlo.
 
 El registro requiere una contraseña de adulto de al menos 12 caracteres y
 confirmar que quien crea la cuenta es padre, madre o tutor legal. Los perfiles y
@@ -74,20 +86,20 @@ el progreso del navegador pueden importarse durante el registro/inicio de sesió
 las contraseñas locales antiguas no se migran. La clave de sesión se guarda como
 cookie HttpOnly y la sesión del servidor se almacena en MongoDB.
 
-## IA opcional
+## Acompañante virtual local
 
-La IA permanece desactivada hasta configurar estos valores privados en `.env`:
+El acompañante utiliza conversaciones incluidas en
+[`shared/companion-responses.ts`](./shared/companion-responses.ts). No llama a
+OpenAI, Groq ni a otros servicios externos; no requiere claves de IA y no guarda
+el historial de chat. El archivo contiene respuestas genéricas en los idiomas
+admitidos por la aplicación para los mundos y juegos disponibles.
 
-```text
-OPENAI_API_KEY=...
-ENABLE_CHILD_AI=true
-```
-
-Reinicia `npm run dev:api` tras cambiar el archivo. La persona adulta debe volver
-a autenticarse y habilitar la IA en **Ajustes** para cada perfil. La API no guarda
-el historial de conversación, pero los mensajes enviados pueden ser procesados
-por el proveedor; revisa sus políticas y los requisitos legales aplicables antes
-de usarla con menores.
+`ENABLE_CHILD_AI=true` habilita esta simulación en el servidor. Cada perfil
+infantil permanece bloqueado inicialmente y una persona adulta debe autenticarse
+en **Ajustes** para habilitarlo. El asistente también aplica respuestas locales
+para mensajes que contienen posibles datos personales o solicitudes de ayuda.
+Consulta [INICIAR_APRENDEKIDS.txt](./INICIAR_APRENDEKIDS.txt) para los pasos
+completos de configuración y arranque.
 
 ## Comprobaciones y compilación
 

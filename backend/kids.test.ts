@@ -35,6 +35,22 @@ describe('child profile validation', () => {
     expect(sanitizeLegacyKids([{ ...profile, completedLevels: ['numbers-99'] }])).toBeNull()
   })
 
+  it('accepts new shop items and rejects unknown equipment identifiers', () => {
+    expect(sanitizeLegacyKids([{
+      ...profile,
+      acc: ['headphones', 'backpack'],
+      bgs: ['forest', 'rainbow'],
+      eqAcc: 'glasses',
+      bg: 'forest'
+    }])?.[0]).toMatchObject({
+      acc: ['headphones', 'backpack'],
+      bgs: ['forest', 'rainbow'],
+      eqAcc: 'glasses',
+      bg: 'forest'
+    })
+    expect(sanitizeLegacyKids([{ ...profile, acc: ['unknown-item'] }])).toBeNull()
+  })
+
   it('does not allow a regular profile update to enable AI', () => {
     const previous = sanitizeLegacyKids([profile])?.[0]
     if (!previous) throw new Error('Expected the test profile to pass validation')

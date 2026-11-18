@@ -2,11 +2,17 @@ import { useState } from 'react'
 import { BarChart3, LogOut, Plus } from 'lucide-react'
 import { useI18n, LangSwitch } from '../i18n'
 import { Acct, Kid, newKid } from '../store'
-import { CHARACTERS } from '../data/gameData'
+import { CHARACTERS, SHOP_ITEMS } from '../data/gameData'
 import { ProgressView } from './ProgressView'
 import { CharacterAvatar } from './CharacterAvatar'
 
-export function ProfilePicker({ acct, onPick, onAdd, onOut }: { acct: Acct; onPick: (k: Kid) => void; onAdd: (k: Kid) => void; onOut: () => void }) {
+export function ProfilePicker({ acct, onPick, onAdd, onOut, testMode }: {
+  acct: Acct
+  onPick: (k: Kid) => void
+  onAdd: (k: Kid) => void
+  onOut: () => void
+  testMode: boolean
+}) {
   const { t } = useI18n()
   const [adding, setAdding] = useState(acct.kids.length === 0)
   const [name, setName] = useState('')
@@ -24,13 +30,18 @@ export function ProfilePicker({ acct, onPick, onAdd, onOut }: { acct: Acct; onPi
           <button onClick={onOut} className="flex items-center gap-2 bg-white/90 px-4 py-2 rounded-2xl font-extrabold text-slate-700 border-2 border-slate-300 cursor-pointer"><LogOut className="w-4 h-4" />{t('out')}</button>
           <LangSwitch />
         </div>
+        {testMode && <p role="status" className="mb-3 rounded-xl bg-amber-100 px-3 py-2 text-center font-bold text-amber-900">{t('test_mode_banner')}</p>}
         <h1 className="text-4xl sm:text-5xl text-center font-black text-white font-fredoka drop-shadow-lg mb-6">{t('who')}</h1>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
           {acct.kids.map((k) => (
             <div key={k.id} className="relative bg-white rounded-3xl p-4 border-4 border-yellow-300 shadow-xl text-center hover:scale-105 transition">
               <button onClick={() => onPick(k)} className="w-full cursor-pointer">
-                <CharacterAvatar character={character(k.char)} className="mx-auto h-16 w-16 animate-bounce-gentle" />
+                <CharacterAvatar
+                  character={character(k.char)}
+                  className="mx-auto h-16 w-16 animate-bounce-gentle"
+                  accessory={SHOP_ITEMS.find((item) => item.kind === 'acc' && item.id === k.eqAcc)}
+                />
                 <p className="text-2xl font-black font-fredoka text-slate-800 mt-1">{k.name}</p>
                 <p className="text-sm font-bold text-slate-500">{k.age} · ⭐ {k.stars}</p>
               </button>

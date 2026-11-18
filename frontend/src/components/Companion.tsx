@@ -1,12 +1,13 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, ReactNode, PointerEvent, KeyboardEvent } from 'react'
-import { Mic, Send, Volume2, VolumeX, MessageCircle, LoaderCircle } from 'lucide-react'
+import { Send, Volume2, VolumeX, MessageCircle, LoaderCircle } from 'lucide-react'
 import { Character, SHOP_ITEMS } from '../data/gameData'
 import { Kid } from '../store'
 import { useI18n } from '../i18n'
-import { speak, listen, canListen, cancelSpeech } from '../speech'
+import { speak, cancelSpeech } from '../speech'
 import { WORLD_LEVELS, WorldId } from '../data/levelData'
 import { CharacterAvatar } from './CharacterAvatar'
 import { apiRequest, ApiError } from '../api'
+import { replyForMessage } from '../../../shared/companion-responses'
 
 type Bot = { say: (m: string) => void; hi: () => void; ok: () => void; no: () => void; win: () => void }
 const Ctx = createContext<Bot>({ say() {}, hi() {}, ok() {}, no() {}, win() {} })
@@ -25,13 +26,14 @@ const CARE_PATTERNS = [
 
 const normalize = (text: string) => text.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '')
 
-export function Companion({ kid, char, children, worldId, levelNumber, onVoiceEnabledChange }: {
+export function Companion({ kid, char, children, worldId, levelNumber, onVoiceEnabledChange, testMode }: {
   kid: Kid
   char: Character
   children: ReactNode
   worldId?: WorldId | null
   levelNumber?: number | null
   onVoiceEnabledChange: (enabled: boolean) => void
+  testMode: boolean
 }) {
   const { t, lang } = useI18n()
   const [msg, setMsg] = useState('')
@@ -39,7 +41,6 @@ export function Companion({ kid, char, children, worldId, levelNumber, onVoiceEn
   const [mute, setMute] = useState(kid.voiceEnabled === false)
   const [open, setOpen] = useState(false)
   const [txt, setTxt] = useState('')
-  const [mic, setMic] = useState(false)
   const [speaking, setSpeaking] = useState(false)
   const [waiting, setWaiting] = useState(false)
   const [position, setPosition] = useState(() => ({
@@ -49,7 +50,7 @@ export function Companion({ kid, char, children, worldId, levelNumber, onVoiceEn
   const timer = useRef<number>(0)
   const dragOffset = useRef<{ x: number; y: number } | null>(null)
   const hasDragged = useRef(false)
-  const acc = SHOP_ITEMS.find((i) => i.id === kid.eqAcc)?.icon
+  const accessory = SHOP_ITEMS.find((item) => item.kind === 'acc' && item.id === kid.eqAcc)
 
   useEffect(() => setMute(kid.voiceEnabled === false), [kid.voiceEnabled])
 
@@ -91,6 +92,9 @@ export function Companion({ kid, char, children, worldId, levelNumber, onVoiceEn
     }
     if (!kid.aiEnabled) return say(t('chat_ai_off'), 'talk')
     if (waiting) return
+    if (testMode) {
+      return say(replyForMessage(s, lang, worldId ?? undefined), 'jump')
+    }
 
     const level = worldId && levelNumber ? WORLD_LEVELS[worldId][levelNumber - 1] : undefined
     const ageBand = kid.age <= 4 ? '3-4' : kid.age <= 6 ? '5-6' : '7-8'
@@ -127,8 +131,6 @@ export function Companion({ kid, char, children, worldId, levelNumber, onVoiceEn
     }
   }
   const send = () => { if (txt.trim() && !waiting) { void chat(txt); setTxt('') } }
-  const talk = () => { setMic(true); listen(lang, chat, () => setMic(false)) }
-
   const dragStart = (event: PointerEvent<HTMLButtonElement>) => {
     if (event.button !== 0) return
     const bounds = event.currentTarget.parentElement?.getBoundingClientRect()
@@ -187,9 +189,6 @@ export function Companion({ kid, char, children, worldId, levelNumber, onVoiceEn
               <label htmlFor="companion-chat" className="sr-only">{t('talk')}</label>
               <input id="companion-chat" maxLength={200} value={txt} disabled={waiting} onChange={(e) => setTxt(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && send()}
                 placeholder={t('talk')} className="min-w-0 flex-1 rounded-xl bg-slate-100 px-3 py-2 font-bold outline-none" />
-              {canListen() && (
-                <button type="button" onClick={talk} disabled={waiting} aria-label="mic" className={`rounded-xl p-2.5 text-white disabled:opacity-50 ${mic ? 'animate-pulse bg-rose-500' : 'bg-emerald-500'}`}><Mic className="h-5 w-5" /></button>
-              )}
               <button type="button" onClick={send} disabled={waiting || !txt.trim()} aria-label="send" className="rounded-xl bg-amber-400 p-2.5 text-amber-950 disabled:opacity-50">
                 {waiting ? <LoaderCircle className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
               </button>
@@ -230,12 +229,12 @@ export function Companion({ kid, char, children, worldId, levelNumber, onVoiceEn
               say(line('cheer'), 'jump')
             }}
             className="relative flex h-40 w-32 touch-none items-end justify-center border-0 bg-transparent p-0 drop-shadow-xl cursor-grab active:cursor-grabbing focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-700">
-            {acc && <span className="absolute -top-5 text-4xl">{acc}</span>}
             <CharacterAvatar
               character={char}
               className="h-full w-full"
               speaking={speaking}
               gesture={mood === 'jump' ? 'excited' : mood === 'talk' ? 'talk' : 'idle'}
+              accessory={accessory}
             />
           </button>
         </div>

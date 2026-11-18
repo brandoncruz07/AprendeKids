@@ -3,8 +3,8 @@ import { AttemptRecord, KidRecord } from './models.js'
 import { WorldId } from './companion.js'
 
 const CHARACTERS = new Set(['dino', 'luna', 'pico', 'pandi', 'leo', 'tuga', 'foxy', 'oliva', 'bunny', 'robo'])
-const ACCESSORIES = new Set(['hat', 'crown', 'glasses', 'cap'])
-const BACKGROUNDS = new Set(['space', 'candy', 'valley'])
+const ACCESSORIES = new Set(['hat', 'crown', 'glasses', 'cap', 'bow', 'headphones', 'scarf', 'backpack', 'flower', 'antenna'])
+const BACKGROUNDS = new Set(['space', 'candy', 'valley', 'forest', 'ocean', 'rainbow'])
 const WORLDS = new Set<WorldId>(['letters', 'reading', 'numbers', 'dinosaurs', 'thinking'])
 const LEVEL_ID = /^(letters|reading|numbers|dinosaurs|thinking)-(?:[1-9]|10)$/
 

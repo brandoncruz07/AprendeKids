@@ -13,6 +13,7 @@ export interface ShopItem {
   price: number
   icon: string
   bg?: string
+  placement?: 'headTop' | 'forehead' | 'eyes' | 'ears' | 'neck' | 'back'
 }
 
 export const CHARACTERS: Character[] = [
@@ -29,11 +30,20 @@ export const CHARACTERS: Character[] = [
 ]
 
 export const SHOP_ITEMS: ShopItem[] = [
-  { id: 'hat', kind: 'acc', price: 30, icon: '🥳' },
-  { id: 'crown', kind: 'acc', price: 60, icon: '👑' },
-  { id: 'glasses', kind: 'acc', price: 25, icon: '🕶️' },
-  { id: 'cap', kind: 'acc', price: 35, icon: '🧢' },
+  { id: 'hat', kind: 'acc', price: 30, icon: '🎩', placement: 'headTop' },
+  { id: 'crown', kind: 'acc', price: 60, icon: '👑', placement: 'headTop' },
+  { id: 'glasses', kind: 'acc', price: 25, icon: '🕶️', placement: 'eyes' },
+  { id: 'cap', kind: 'acc', price: 35, icon: '🧢', placement: 'forehead' },
+  { id: 'bow', kind: 'acc', price: 28, icon: '🎀', placement: 'forehead' },
+  { id: 'headphones', kind: 'acc', price: 45, icon: '🎧', placement: 'ears' },
+  { id: 'scarf', kind: 'acc', price: 40, icon: '🧣', placement: 'neck' },
+  { id: 'backpack', kind: 'acc', price: 55, icon: '🎒', placement: 'back' },
+  { id: 'flower', kind: 'acc', price: 32, icon: '🌼', placement: 'forehead' },
+  { id: 'antenna', kind: 'acc', price: 50, icon: '✨', placement: 'headTop' },
   { id: 'space', kind: 'bg', price: 50, icon: '🌌', bg: 'from-indigo-950 via-purple-900 to-slate-900' },
   { id: 'candy', kind: 'bg', price: 45, icon: '🍭', bg: 'from-pink-300 via-purple-200 to-yellow-100' },
-  { id: 'valley', kind: 'bg', price: 40, icon: '🌋', bg: 'from-amber-200 via-emerald-200 to-teal-400' }
+  { id: 'valley', kind: 'bg', price: 40, icon: '🌋', bg: 'from-amber-200 via-emerald-200 to-teal-400' },
+  { id: 'forest', kind: 'bg', price: 45, icon: '🌲', bg: 'from-green-700 via-emerald-500 to-lime-300' },
+  { id: 'ocean', kind: 'bg', price: 55, icon: '🐠', bg: 'from-sky-600 via-cyan-400 to-blue-200' },
+  { id: 'rainbow', kind: 'bg', price: 50, icon: '🌈', bg: 'from-pink-300 via-amber-200 to-sky-300' }
 ]

@@ -1,0 +1,126 @@
+APRENDEKIDS - CONFIGURACION Y ARRANQUE LOCAL
+============================================
+
+REQUISITOS
+----------
+- Windows 10/11
+- Node.js 22.12 o posterior y npm
+- Una base de datos MongoDB Atlas accesible desde la red donde correrá el backend
+
+1. PREPARAR MONGODB ATLAS
+-------------------------
+1. En Atlas, crea un usuario de base de datos (no uses la contraseña de tu cuenta
+   de Atlas).
+2. En Network Access, permite la IP pública desde la que se conectará el backend.
+   No uses 0.0.0.0/0 para una configuración normal.
+3. En Connect > Drivers, copia la URI de MongoDB y usa la base de datos
+   "aprendekids" en la ruta. Codifica los caracteres especiales de la contraseña
+   para URL (por ejemplo, @ se escribe %40).
+
+2. CONFIGURAR EL ARCHIVO .ENV
+-----------------------------
+Abre PowerShell en la carpeta del proyecto. Solo si todavía no existe .env,
+ejecuta:
+
+  if (!(Test-Path .env)) { Copy-Item .env.example .env }
+  notepad .env
+
+Este paso se hace una sola vez. Si ya existe un .env configurado, conserva ese
+archivo y su MONGODB_URI; no crees otra base de datos ni repitas la configuración
+de Atlas. El backend se conecta a la base existente cada vez que lo inicias.
+
+Configura estas variables en .env:
+
+  MONGODB_URI=mongodb+srv://USUARIO:CONTRASENA@TU-CLUSTER.mongodb.net/aprendekids?retryWrites=true&w=majority
+  ENABLE_CHILD_AI=true
+  API_HOST=127.0.0.1
+  API_PORT=3001
+  WEB_ORIGIN=http://127.0.0.1:5173
+  COOKIE_SECURE=false
+
+MONGODB_URI es obligatoria. Reemplaza el ejemplo por la URI real de Atlas; nunca
+copies una URI real, contraseñas o claves en este archivo de instrucciones,
+capturas, mensajes o Git. El archivo .env está ignorado por Git.
+
+ENABLE_CHILD_AI activa o desactiva la simulación local en el servidor. Cada perfil
+infantil sigue bloqueado hasta que una persona adulta lo habilite en Ajustes.
+El acompañante usa conversaciones incluidas en la aplicación: no necesita
+OPENAI_API_KEY, GROQ_API_KEY ni ninguna otra clave de IA, y no envía mensajes a
+proveedores externos.
+
+API_HOST, API_PORT y WEB_ORIGIN pueden conservar esos valores para desarrollo
+local. COOKIE_SECURE=false es solo para HTTP local; en producción la aplicación
+debe publicarse por HTTPS y las cookies seguras deben permanecer habilitadas.
+No subas el archivo .env al repositorio.
+
+3. INSTALAR E INICIAR
+---------------------
+Desde la carpeta raíz del proyecto, instala las dependencias una sola vez:
+
+  npm ci
+
+Abre dos terminales de PowerShell en la carpeta del proyecto.
+
+Terminal 1 - backend:
+
+  npm run dev:api
+
+Terminal 2 - frontend:
+
+  npm run dev
+
+Abre esta dirección en el navegador:
+
+  http://127.0.0.1:5173
+
+La aplicación reenvía las solicitudes /api al backend en el puerto 3001. Para
+comprobar la conexión, ejecuta en PowerShell:
+
+  Invoke-RestMethod http://127.0.0.1:5173/api/health
+
+La respuesta esperada debe incluir:
+
+  dbAvailable       : True
+  companionAvailable: True
+
+MODO DE PRUEBA SIN BACKEND
+--------------------------
+En la pantalla de acceso, selecciona "Entrar en modo de prueba" para probar
+juegos, tienda, logros y perfiles de ejemplo sin iniciar sesión ni conectarte a
+MongoDB. Los cambios se guardan solo en este navegador, no en la base de datos.
+El acompañante empieza bloqueado. En Ajustes, usa la contraseña adulta de
+demostración demo12345678 para simular la aprobación y habilitarlo.
+
+4. HABILITAR EL ACOMPAÑANTE PARA UN PERFIL
+------------------------------------------
+Inicia sesión con la cuenta adulta, selecciona el perfil y abre Ajustes. Vuelve
+a confirmar la contraseña adulta y activa "Permitir el acompañante virtual".
+El acompañante presenta respuestas preparadas sobre letras, lectura, números,
+dinosaurios y juegos para pensar. La conversación no se guarda como historial.
+
+5. PRUEBAS Y COMPILACION
+------------------------
+Desde la carpeta del proyecto:
+
+  npm run typecheck
+  npm test
+  npm run build
+
+Para iniciar solo el backend compilado:
+
+  npm run start:api
+
+El frontend compilado queda en frontend/dist. Para producción, aloja el frontend
+y el backend en servicios configurados para HTTPS, configura MONGODB_URI en el
+entorno privado del backend y enruta /api al backend. No publiques únicamente
+los archivos estáticos: el inicio de sesión y los perfiles necesitan la API.
+
+SOLUCION DE PROBLEMAS
+---------------------
+- Si dbAvailable es False, revisa MONGODB_URI, usuario/contraseña de Atlas,
+  codificación URL de la contraseña, IP permitida y acceso de red.
+- Si companionAvailable es False, revisa que ENABLE_CHILD_AI=true y reinicia el
+  backend.
+- Si el puerto 3001 o 5173 está ocupado, cierra la instancia anterior o cambia
+  la configuración del proyecto para usar puertos libres.
+- Para detener los servidores de desarrollo, presiona Ctrl+C en cada terminal.

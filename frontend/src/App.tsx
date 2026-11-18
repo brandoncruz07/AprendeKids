@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { LangProvider, useI18n } from './i18n'
-import { Acct, Attempt, Kid } from './store'
+import { Acct, Attempt, Kid, newKid } from './store'
 import { CHARACTERS, ShopItem } from './data/gameData'
 import { AuthScreen } from './components/AuthScreen'
 import { ProfilePicker } from './components/ProfilePicker'
@@ -15,6 +15,65 @@ import { SettingsView } from './components/SettingsView'
 import { WorldId } from './data/levelData'
 import { apiRequest, ApiError } from './api'
 
+const DEMO_MODE_KEY = 'ak_test_mode'
+const DEMO_ACCOUNT_KEY = 'ak_demo_account'
+
+function createDemoAccount(): Acct {
+  const first = {
+    ...newKid('Sofi', 6, 'luna'),
+    id: 'demo-kid-sofi',
+    stars: 24,
+    coins: 250,
+    acc: ['glasses', 'crown', 'scarf'],
+    bgs: ['space', 'rainbow'],
+    eqAcc: 'glasses',
+    bg: 'space',
+    attempts: [{ t: Date.now(), w: 'letters', ok: true, ms: 4200, l: 1 }],
+    completedLevels: ['letters-1', 'numbers-1']
+  }
+  const second = {
+    ...newKid('Mateo', 8, 'dino'),
+    id: 'demo-kid-mateo',
+    stars: 16,
+    coins: 180,
+    acc: ['hat', 'backpack'],
+    bgs: ['forest'],
+    eqAcc: 'hat',
+    bg: 'forest',
+    attempts: [{ t: Date.now(), w: 'dinosaurs', ok: true, ms: 5100, l: 1 }],
+    completedLevels: ['dinosaurs-1']
+  }
+  return { id: 'demo-account', name: 'Familia de prueba', email: 'demo@aprendekids.local', kids: [first, second] }
+}
+
+function isDemoAccount(value: unknown): value is Acct {
+  if (typeof value !== 'object' || value === null) return false
+  const account = value as Partial<Acct>
+  if (account.id !== 'demo-account' || typeof account.name !== 'string'
+    || typeof account.email !== 'string' || !Array.isArray(account.kids)) return false
+  return account.kids.every((value) => {
+    if (typeof value !== 'object' || value === null) return false
+    const kid = value as Partial<Kid>
+    return typeof kid.id === 'string' && typeof kid.name === 'string'
+      && typeof kid.age === 'number' && typeof kid.char === 'string'
+      && typeof kid.stars === 'number' && typeof kid.coins === 'number'
+      && Array.isArray(kid.acc) && Array.isArray(kid.bgs) && Array.isArray(kid.attempts)
+  })
+}
+
+function readDemoAccount(): Acct {
+  const saved = localStorage.getItem(DEMO_ACCOUNT_KEY)
+  if (saved) {
+    try {
+      const account: unknown = JSON.parse(saved)
+      if (isDemoAccount(account)) return account
+    } catch {
+      // Replace malformed demo data with a fresh sample account.
+    }
+  }
+  return createDemoAccount()
+}
+
 export default function App() {
   return <LangProvider><Root /></LangProvider>
 }
@@ -23,6 +82,7 @@ function Root() {
   const { t } = useI18n()
   const [acct, setAcct] = useState<Acct | null>(null)
   const [loading, setLoading] = useState(true)
+  const [testMode, setTestMode] = useState(false)
   const [kidId, setKidId] = useState<string | null>(null)
   const [tab, setTab] = useState<Tab>('map')
   const [world, setWorld] = useState<WorldId | null>(null)
@@ -33,6 +93,14 @@ function Root() {
   const syncRevision = useRef(0)
 
   useEffect(() => {
+    if (sessionStorage.getItem(DEMO_MODE_KEY) === 'true') {
+      const account = readDemoAccount()
+      acctRef.current = account
+      setAcct(account)
+      setTestMode(true)
+      setLoading(false)
+      return
+    }
     let active = true
     apiRequest<{ account: Acct }>('/api/auth/me')
       .then(({ account }) => {
@@ -61,7 +129,19 @@ function Root() {
     setSyncError('')
   }
 
+  const saveDemoAccount = (account: Acct) => {
+    acctRef.current = account
+    setAcct(account)
+    try {
+      localStorage.setItem(DEMO_ACCOUNT_KEY, JSON.stringify(account))
+      setSyncError('')
+    } catch {
+      setSyncError('save')
+    }
+  }
+
   const enqueueAccountUpdate = (request: () => Promise<Acct>) => {
+    if (testMode) return Promise.resolve()
     const revision = ++syncRevision.current
     const task = syncQueue.current.catch(() => undefined).then(request)
     syncQueue.current = task.then(() => undefined, () => undefined)
@@ -88,6 +168,15 @@ function Root() {
     }
     acctRef.current = updatedAccount
     setAcct(updatedAccount)
+    if (testMode) {
+      try {
+        localStorage.setItem(DEMO_ACCOUNT_KEY, JSON.stringify(updatedAccount))
+        setSyncError('')
+      } catch {
+        setSyncError('save')
+      }
+      return Promise.resolve()
+    }
     return enqueueAccountUpdate(async () => {
       const result = await apiRequest<{ account: Acct }>(`/api/kids/${encodeURIComponent(profileId)}`, {
         method: 'PATCH',
@@ -97,13 +186,18 @@ function Root() {
     })
   }
 
-  const updateAI = (profileId: string, enabled: boolean) => enqueueAccountUpdate(async () => {
-    const result = await apiRequest<{ account: Acct }>(`/api/kids/${encodeURIComponent(profileId)}/ai`, {
-      method: 'PATCH',
-      body: JSON.stringify({ enabled })
+  const updateAI = (profileId: string, enabled: boolean) => {
+    if (testMode) {
+      return updateKid(profileId, (profile) => ({ ...profile, aiEnabled: enabled }))
+    }
+    return enqueueAccountUpdate(async () => {
+      const result = await apiRequest<{ account: Acct }>(`/api/kids/${encodeURIComponent(profileId)}/ai`, {
+        method: 'PATCH',
+        body: JSON.stringify({ enabled })
+      })
+      return result.account
     })
-    return result.account
-  })
+  }
 
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center bg-slate-100 font-bold text-slate-600">{t('settings_checking')}</div>
@@ -113,7 +207,15 @@ function Root() {
     return (
       <>
         {syncError && <p role="alert" className="fixed left-1/2 top-3 z-50 -translate-x-1/2 rounded-xl bg-rose-100 px-4 py-2 font-bold text-rose-800">{syncError === 'backend' ? t('e_backend') : t('settings_save_error')}</p>}
-        <AuthScreen onAuth={acceptAccount} />
+        <AuthScreen
+          onAuth={acceptAccount}
+          onTestMode={() => {
+            const account = readDemoAccount()
+            sessionStorage.setItem(DEMO_MODE_KEY, 'true')
+            setTestMode(true)
+            saveDemoAccount(account)
+          }}
+        />
       </>
     )
   }
@@ -126,6 +228,7 @@ function Root() {
         {syncError && <p role="alert" className="fixed left-1/2 top-3 z-50 -translate-x-1/2 rounded-xl bg-rose-100 px-4 py-2 font-bold text-rose-800">{syncErrorMessage}</p>}
         <ProfilePicker
           acct={acct}
+          testMode={testMode}
           onPick={(profile) => {
             setKidId(profile.id)
             setTab('map')
@@ -133,6 +236,10 @@ function Root() {
             setLevel(null)
           }}
           onAdd={(profile) => {
+            if (testMode) {
+              saveDemoAccount({ ...acct, kids: [...acct.kids, profile] })
+              return
+            }
             void enqueueAccountUpdate(async () => {
               const result = await apiRequest<{ account: Acct }>('/api/kids', {
                 method: 'POST',
@@ -142,6 +249,12 @@ function Root() {
             })
           }}
           onOut={async () => {
+            if (testMode) {
+              sessionStorage.removeItem(DEMO_MODE_KEY)
+              setTestMode(false)
+              acceptAccount(null)
+              return
+            }
             try {
               await syncQueue.current
               await apiRequest('/api/auth/logout', { method: 'POST' })
@@ -180,6 +293,7 @@ function Root() {
       char={character}
       worldId={world}
       levelNumber={level}
+      testMode={testMode}
       onVoiceEnabledChange={(enabled) => void updateKid(kid.id, (profile) => ({ ...profile, voiceEnabled: enabled }))}
     >
       <div className="min-h-screen bg-slate-100">
@@ -195,6 +309,7 @@ function Root() {
           }}
           onSwitch={() => setKidId(null)}
         />
+        {testMode && <p role="status" className="sticky top-0 z-30 bg-amber-100 px-3 py-2 text-center text-sm font-bold text-amber-900">{t('test_mode_banner')}</p>}
         {world ? (
           <Quiz
             key={`${world}-${level}`}
@@ -240,6 +355,7 @@ function Root() {
             kid={kid}
             onUpdate={(changes) => updateKid(kid.id, (profile) => ({ ...profile, ...changes }))}
             onAiToggle={(enabled) => updateAI(kid.id, enabled)}
+            testMode={testMode}
           />
         )}
       </div>

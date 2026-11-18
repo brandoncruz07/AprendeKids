@@ -8,7 +8,7 @@ import { CharacterAvatar } from './CharacterAvatar'
 
 type AuthResponse = { account: Acct }
 
-export function AuthScreen({ onAuth }: { onAuth: (account: Acct) => void }) {
+export function AuthScreen({ onAuth, onTestMode }: { onAuth: (account: Acct) => void; onTestMode: () => void }) {
   const { t } = useI18n()
   const [mode, setMode] = useState<'login' | 'reg'>(() => loadDb().length ? 'login' : 'reg')
   const [f, setF] = useState({ name: '', email: '', pw: '' })
@@ -99,6 +99,12 @@ export function AuthScreen({ onAuth }: { onAuth: (account: Acct) => void }) {
           {t(reg ? 'to_login' : 'to_reg')}
         </button>
       </form>
+      <div className="relative z-10 mt-4 text-center">
+        <button type="button" onClick={onTestMode} className="font-extrabold text-white underline underline-offset-4 drop-shadow">
+          {t('test_mode_link')}
+        </button>
+        <p className="mt-1 text-sm font-semibold text-white drop-shadow">{t('test_mode_hint')}</p>
+      </div>
     </div>
   )
 }

@@ -24,6 +24,7 @@ export function ShopView({ kid, onBuy, onEquip }: { kid: Kid; onBuy: (item: Shop
                 <div className={`mb-3 flex h-24 items-center justify-center rounded-2xl text-6xl ${item.bg ? `bg-gradient-to-br ${item.bg}` : 'bg-amber-100'}`}>
                   {item.icon}
                 </div>
+                <h2 className="mb-3 min-h-10 text-sm font-black text-slate-700">{t(`item_${item.id}`)}</h2>
                 <button
                   type="button"
                   disabled={!owned && !canAfford}

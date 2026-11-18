@@ -3,9 +3,9 @@ import { createServer, IncomingMessage, ServerResponse } from 'node:http'
 import {
   CompanionInput,
   containsPersonalInfo,
-  generateCompanionReply,
-  parseCompanionInput,
-  privacyReply
+  containsSafetyConcern,
+  getCompanionReply,
+  parseCompanionInput
 } from './companion.js'
 import { connectDatabase, databaseConnected } from './db.js'
 import { ParentAccount, ParentAccountDocument } from './models.js'
@@ -135,8 +135,8 @@ function findKid(account: ParentAccountDocument, kidId: string) {
   return account.kids.find((kid) => kid.id === kidId)
 }
 
-function aiAvailable() {
-  return process.env.ENABLE_CHILD_AI === 'true' && Boolean(process.env.OPENAI_API_KEY)
+function companionAvailable() {
+  return process.env.ENABLE_CHILD_AI === 'true'
 }
 
 async function handleCompanion(input: CompanionInput, request: IncomingMessage, response: ServerResponse) {
@@ -151,13 +151,12 @@ async function handleCompanion(input: CompanionInput, request: IncomingMessage, 
     sendJson(response, 403, { code: 'PROFILE_AI_DISABLED' })
     return
   }
-  const apiKey = process.env.OPENAI_API_KEY
-  if (process.env.ENABLE_CHILD_AI !== 'true' || !apiKey) {
+  if (!companionAvailable()) {
     sendJson(response, 503, { code: 'AI_UNAVAILABLE' })
     return
   }
-  if (containsPersonalInfo(input.message)) {
-    sendJson(response, 200, { reply: privacyReply(input.language) })
+  if (containsPersonalInfo(input.message) || containsSafetyConcern(input.message)) {
+    sendJson(response, 200, { reply: getCompanionReply(input) })
     return
   }
   if (!allowRequest(`ai:${auth.account.id}`, 20)) {
@@ -165,19 +164,7 @@ async function handleCompanion(input: CompanionInput, request: IncomingMessage, 
     return
   }
 
-  try {
-    const reply = await generateCompanionReply(input, {
-      apiKey,
-      model: process.env.OPENAI_MODEL ?? 'gpt-4.1-mini'
-    })
-    sendJson(response, 200, { reply })
-  } catch (error) {
-    const status = error && typeof error === 'object' && 'status' in error
-      ? Number((error as { status: unknown }).status)
-      : 0
-    console.error(`Companion provider request failed (status ${status || 'network'}).`)
-    sendJson(response, 502, { code: 'AI_UNAVAILABLE' })
-  }
+  sendJson(response, 200, { reply: getCompanionReply(input) })
 }
 
 async function handleRequest(request: IncomingMessage, response: ServerResponse) {
@@ -202,7 +189,7 @@ async function handleRequest(request: IncomingMessage, response: ServerResponse)
         dbAvailable = false
       }
     }
-    sendJson(response, 200, { ok: true, dbAvailable, aiAvailable: dbAvailable && aiAvailable() })
+    sendJson(response, 200, { ok: true, dbAvailable, companionAvailable: dbAvailable && companionAvailable() })
     return
   }
 
@@ -332,7 +319,7 @@ async function handleRequest(request: IncomingMessage, response: ServerResponse)
     const kid = findKid(auth.account, aiPath[1])
     if (!kid) throw new HttpError(404, 'PROFILE_NOT_FOUND')
     const enabled = (body as { enabled: boolean }).enabled
-    if (enabled && !aiAvailable()) throw new HttpError(503, 'AI_UNAVAILABLE')
+    if (enabled && !companionAvailable()) throw new HttpError(503, 'AI_UNAVAILABLE')
     kid.aiEnabled = enabled
     await auth.account.save()
     sendJson(response, 200, { account: publicAccount(auth.account) })

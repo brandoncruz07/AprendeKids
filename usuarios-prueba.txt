@@ -1,0 +1,53 @@
+APRENDEKIDS - CUENTAS FICTICIAS PARA PRUEBAS
+NO estan creadas en MongoDB. Registra cada cuenta manualmente en la app.
+Solo para desarrollo/pruebas. Correos example.com ficticios. No reutilizar estas claves.
+
+Cuenta: Familia Prueba 01
+Correo: ak.prueba01@example.com
+Contrasena temporal: Kfw7RA9fpnEOnFJ3ANp3X4_7
+Perfil(es): Alex (edad 3, avatar dino)
+
+Cuenta: Familia Prueba 02
+Correo: ak.prueba02@example.com
+Contrasena temporal: SMmCJnlPEwcCeRT5JuXTgbpR
+Perfil(es): Emma (edad 4, avatar luna)
+
+Cuenta: Familia Prueba 03
+Correo: ak.prueba03@example.com
+Contrasena temporal: I5GIcsMaFjLWUiGG_E-05LP6
+Perfil(es): Milo (edad 5, avatar pico)
+
+Cuenta: Familia Prueba 04
+Correo: ak.prueba04@example.com
+Contrasena temporal: PkvQXM3_Xv7sSZxoa0JypRLa
+Perfil(es): Sara (edad 6, avatar pandi); Nico (edad 7, avatar leo)
+
+Cuenta: Familia Prueba 05
+Correo: ak.prueba05@example.com
+Contrasena temporal: g4Sh_HfIFBdafFp0Rlo9QGYN
+Perfil(es): Nico (edad 7, avatar leo)
+
+Cuenta: Familia Prueba 06
+Correo: ak.prueba06@example.com
+Contrasena temporal: En5k74b89RyIbCh46UUH4xuz
+Perfil(es): Luna (edad 8, avatar tuga)
+
+Cuenta: Familia Prueba 07
+Correo: ak.prueba07@example.com
+Contrasena temporal: U_AEuyAwMp3XHtr5jmU0G7ro
+Perfil(es): Teo (edad 4, avatar foxy)
+
+Cuenta: Familia Prueba 08
+Correo: ak.prueba08@example.com
+Contrasena temporal: WS0l24IPtDTUQRl4R1oVOAuS
+Perfil(es): Zoe (edad 5, avatar oliva); Max (edad 6, avatar bunny)
+
+Cuenta: Familia Prueba 09
+Correo: ak.prueba09@example.com
+Contrasena temporal: szNZXYqz2fTdZAcM_pgpo-aO
+Perfil(es): Max (edad 6, avatar bunny)
+
+Cuenta: Familia Prueba 10
+Correo: ak.prueba10@example.com
+Contrasena temporal: kuPX2My4pNIsEYeK410y_GK7
+Perfil(es): Ana (edad 8, avatar robo)

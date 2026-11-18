@@ -6,10 +6,11 @@ import { apiRequest, ApiError } from '../api'
 type SettingsStatus = 'checking' | 'ready' | 'setup' | 'offline'
 type SettingsChanges = Partial<Pick<Kid, 'aiEnabled' | 'voiceEnabled' | 'speechRate'>>
 
-export function SettingsView({ kid, onUpdate, onAiToggle }: {
+export function SettingsView({ kid, onUpdate, onAiToggle, testMode }: {
   kid: Kid
   onUpdate: (changes: SettingsChanges) => Promise<void>
   onAiToggle: (enabled: boolean) => Promise<void>
+  testMode: boolean
 }) {
   const { t } = useI18n()
   const [password, setPassword] = useState('')
@@ -20,23 +21,37 @@ export function SettingsView({ kid, onUpdate, onAiToggle }: {
   const [status, setStatus] = useState<SettingsStatus>('checking')
 
   useEffect(() => {
+    if (testMode) {
+      setStatus('ready')
+      return
+    }
     const controller = new AbortController()
     fetch('/api/health', { signal: controller.signal })
       .then(async (response) => {
         if (!response.ok) throw new Error('Settings health check failed')
-        return response.json() as Promise<{ aiAvailable?: unknown; dbAvailable?: unknown }>
+        return response.json() as Promise<{ companionAvailable?: unknown; dbAvailable?: unknown }>
       })
-      .then((result) => setStatus(result.dbAvailable === false ? 'offline' : result.aiAvailable === true ? 'ready' : 'setup'))
+      .then((result) => setStatus(result.dbAvailable === false ? 'offline' : result.companionAvailable === true ? 'ready' : 'setup'))
       .catch(() => {
         if (!controller.signal.aborted) setStatus('offline')
       })
     return () => controller.abort()
-  }, [])
+  }, [testMode])
 
   const unlock = async (event: FormEvent) => {
     event.preventDefault()
     setSaving(true)
     try {
+      if (testMode) {
+        if (password !== 'demo12345678') {
+          setAuthError(true)
+          return
+        }
+        setUnlocked(true)
+        setPassword('')
+        setAuthError(false)
+        return
+      }
       await apiRequest('/api/auth/reauth', { method: 'POST', body: JSON.stringify({ password }) })
       setUnlocked(true)
       setPassword('')
@@ -80,6 +95,7 @@ export function SettingsView({ kid, onUpdate, onAiToggle }: {
       {!unlocked && (
         <form onSubmit={unlock} className="space-y-3 rounded-3xl border-2 border-purple-200 bg-white p-5 shadow">
           <label htmlFor="parent-settings-password" className="block font-bold text-slate-700">{t('settings_password')}</label>
+          {testMode && <p className="text-sm font-semibold text-sky-800">{t('settings_test_password')}</p>}
           <div className="flex flex-wrap gap-2">
             <input
               id="parent-settings-password"

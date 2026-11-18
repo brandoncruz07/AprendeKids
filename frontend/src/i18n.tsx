@@ -25,6 +25,10 @@ const rows: [string, string, string, string][] = [
   ['pname', 'Nombre del adulto', 'Adult name', 'Nome do adulto'],
   ['to_reg', '¿Primera vez? Regístrate', 'First time? Sign up', 'Primeira vez? Cadastre-se'],
   ['to_login', '¿Ya tienes cuenta? Entra', 'Have an account? Log in', 'Já tem conta? Entre'],
+  ['test_mode_link', 'Entrar en modo de prueba', 'Try the demo mode', 'Entrar no modo de teste'],
+  ['test_mode_hint', 'Usa perfiles de ejemplo; no modifica tu cuenta.', 'Uses sample profiles; it does not change your account.', 'Usa perfis de exemplo; não altera sua conta.'],
+  ['test_mode_banner', 'Modo de prueba: los cambios no se guardan en MongoDB.', 'Demo mode: changes are not saved to MongoDB.', 'Modo de teste: as alterações não são salvas no MongoDB.'],
+  ['settings_test_password', 'Modo de prueba: contraseña adulta de ejemplo: demo12345678', 'Demo mode: sample adult password: demo12345678', 'Modo de teste: senha adulta de exemplo: demo12345678'],
   ['e_cred', 'Correo o contraseña incorrectos', 'Wrong email or password', 'E-mail ou senha incorretos'],
   ['e_exist', 'Ese correo ya está registrado', 'That email is already registered', 'Este e-mail já está cadastrado'],
   ['e_fill', 'Completa todos los campos.', 'Fill in all fields.', 'Preencha todos os campos.'],
@@ -54,14 +58,14 @@ const rows: [string, string, string, string][] = [
   ['settings_password', 'Contraseña de la cuenta adulta', 'Adult account password', 'Senha da conta adulta'],
   ['settings_unlock', 'Desbloquear', 'Unlock', 'Desbloquear'],
   ['settings_auth_error', 'La contraseña no coincide.', 'That password does not match.', 'A senha não confere.'],
-  ['settings_ai', 'Acompañante con IA', 'AI companion', 'Companheiro com IA'],
-  ['settings_ai_desc', 'Actívala para este perfil cuando el servidor seguro esté configurado.', 'Enable it for this profile once the secure server is configured.', 'Ative para este perfil quando o servidor seguro estiver configurado.'],
-  ['settings_ai_ready', 'Servidor listo para IA.', 'AI server is ready.', 'Servidor de IA pronto.'],
-  ['settings_ai_setup', 'El servidor no está configurado. No escribas la clave aquí; pide a un adulto que la configure en el servidor.', 'The server is not configured. Do not enter a key here; ask an adult to configure it on the server.', 'O servidor não está configurado. Não digite a chave aqui; peça a um adulto para configurá-la no servidor.'],
-  ['settings_api_offline', 'No se pudo conectar con el servidor de IA.', 'Could not connect to the AI server.', 'Não foi possível conectar ao servidor de IA.'],
+  ['settings_ai', 'Acompañante virtual', 'Virtual companion', 'Companheiro virtual'],
+  ['settings_ai_desc', 'Te ayuda a explorar los mundos y actividades de AprendeKids.', 'Helps you explore AprendeKids worlds and activities.', 'Ajuda você a explorar os mundos e atividades do AprendeKids.'],
+  ['settings_ai_ready', 'El acompañante está disponible.', 'The companion is available.', 'O companheiro está disponível.'],
+  ['settings_ai_setup', 'El acompañante está desactivado por ahora. Pide ayuda a una persona adulta.', 'The companion is turned off for now. Ask an adult for help.', 'O companheiro está desativado por enquanto. Peça ajuda a um adulto.'],
+  ['settings_api_offline', 'No se pudo conectar con el servidor de AprendeKids.', 'Could not connect to the AprendeKids server.', 'Não foi possível conectar ao servidor AprendeKids.'],
   ['settings_checking', 'Comprobando el servidor…', 'Checking the server…', 'Verificando o servidor…'],
-  ['settings_ai_toggle', 'Permitir IA en este perfil', 'Allow AI for this profile', 'Permitir IA neste perfil'],
-  ['settings_ai_privacy', 'Los mensajes se procesan con OpenAI. La app no guarda el historial; revisa la política del proveedor y pide autorización parental.', 'Messages are processed by OpenAI. The app does not save chat history; review the provider policy and get parental permission.', 'As mensagens são processadas pela OpenAI. O app não salva o histórico; confira a política do provedor e obtenha autorização parental.'],
+  ['settings_ai_toggle', 'Permitir el acompañante en este perfil', 'Allow the companion for this profile', 'Permitir o companheiro neste perfil'],
+  ['settings_ai_privacy', 'El acompañante responde sobre los mundos y juegos de AprendeKids. Los mensajes no se guardan como historial.', 'The companion answers about AprendeKids worlds and games. Messages are not saved as chat history.', 'O companheiro responde sobre os mundos e jogos do AprendeKids. As mensagens não são salvas como histórico.'],
   ['settings_voice', 'Voz del acompañante', 'Companion voice', 'Voz do companheiro'],
   ['settings_voice_desc', 'Se conserva el tono propio del avatar seleccionado.', 'The selected avatar keeps its own voice pitch.', 'O avatar selecionado mantém seu próprio tom de voz.'],
   ['settings_voice_enabled', 'Hablar en voz alta', 'Speak aloud', 'Falar em voz alta'],
@@ -69,14 +73,14 @@ const rows: [string, string, string, string][] = [
   ['settings_language', 'Idioma', 'Language', 'Idioma'],
   ['settings_language_desc', 'Cambia el idioma de la aplicación y del acompañante.', 'Change the app and companion language.', 'Altere o idioma do app e do companheiro.'],
   ['settings_age_auto', 'La dificultad se adapta automáticamente a la edad de {age} años.', 'Difficulty adjusts automatically for age {age}.', 'A dificuldade se ajusta automaticamente para {age} anos.'],
-  ['chat_ai_off', 'La IA está apagada en este perfil. Pide a una persona adulta que la active en Ajustes.', 'AI is off for this profile. Ask a grown-up to enable it in Settings.', 'A IA está desativada neste perfil. Peça a um adulto para ativá-la em Configurações.'],
+  ['chat_ai_off', 'El acompañante está bloqueado en este perfil. Pide a una persona adulta que lo active en Ajustes.', 'The companion is locked for this profile. Ask a grown-up to enable it in Settings.', 'O companheiro está bloqueado neste perfil. Peça a um adulto para ativá-lo em Configurações.'],
   ['choose', 'Escoge un mundo para aprender jugando', 'Pick a world and learn by playing', 'Escolha um mundo para aprender brincando'],
   ['levels', 'niveles', 'levels', 'níveis'],
   ['completed_levels', 'niveles completados', 'levels completed', 'níveis concluídos'],
-  ['chat_local', 'IA generativa educativa · sin historial en la app', 'Educational generative AI · no in-app history', 'IA generativa educativa · sem histórico no app'],
-  ['chat_notice', 'OpenAI puede procesar tus mensajes. No compartas datos personales y pide permiso a una persona adulta.', 'OpenAI may process your messages. Do not share personal information and ask a grown-up first.', 'A OpenAI pode processar suas mensagens. Não compartilhe dados pessoais e peça autorização a um adulto.'],
+  ['chat_local', 'Acompañante educativo de AprendeKids', 'Your AprendeKids learning buddy', 'Companheiro educativo do AprendeKids'],
+  ['chat_notice', 'Pregúntame sobre letras, lectura, números, dinosaurios y juegos. No compartas datos personales.', 'Ask me about letters, reading, numbers, dinosaurs, and games. Do not share personal information.', 'Pergunte sobre letras, leitura, números, dinossauros e jogos. Não compartilhe dados pessoais.'],
   ['chat_error', 'No pude responder ahora. Inténtalo más tarde.', 'I could not reply right now. Please try again later.', 'Não consegui responder agora. Tente novamente mais tarde.'],
-  ['chat_ask_adult', 'La IA no está activada. Pide a una persona adulta que la configure.', 'AI is not enabled. Ask a grown-up to set it up.', 'A IA não está ativada. Peça a um adulto para configurá-la.'],
+  ['chat_ask_adult', 'El acompañante no está activado. Pide a una persona adulta que lo revise.', 'The companion is not enabled. Ask a grown-up to check it.', 'O companheiro não está ativado. Peça a um adulto para verificar.'],
   ['chat_slow', 'Espera un momento antes de volver a escribir.', 'Please wait a moment before sending another message.', 'Espere um instante antes de enviar outra mensagem.'],
   ['chat_privacy', 'No compartas datos personales aquí. ¡Mejor juguemos con letras o números!', 'Do not share personal information here. Let us play with letters or numbers!', 'Não compartilhe dados pessoais aqui. Vamos brincar com letras ou números!'],
   ['chat_care', 'Gracias por contármelo. Busca a un adulto de confianza que esté contigo para que te ayude.', 'Thank you for telling me. Please find a trusted grown-up nearby to help you.', 'Obrigado por me contar. Procure um adulto de confiança que esteja perto para ajudar.'],
@@ -169,6 +173,28 @@ const rows: [string, string, string, string][] = [
   ['a_rd', 'Gran lector', 'Great reader', 'Grande leitor'],
   ['a_exp', 'Explorador', 'Explorer', 'Explorador'],
   ['a_str', '5 seguidos', '5 in a row', '5 seguidos'],
+  ['a_dino', 'Explorador de fósiles', 'Fossil finder', 'Explorador de fósseis'],
+  ['a_think', 'Mente curiosa', 'Curious thinker', 'Mente curiosa'],
+  ['a_levels', 'Maestro de niveles', 'Level star', 'Mestre dos níveis'],
+  ['a_master', 'Mapa completo', 'Map master', 'Mapa completo'],
+  ['a_practice', 'Gran práctica', 'Practice champion', 'Campeão da prática'],
+  ['a_perfect', 'Muchos aciertos', 'Lots of correct answers', 'Muitos acertos'],
+  ['item_hat', 'Sombrero de fiesta', 'Party hat', 'Chapéu de festa'],
+  ['item_crown', 'Corona brillante', 'Shiny crown', 'Coroa brilhante'],
+  ['item_glasses', 'Gafas divertidas', 'Fun glasses', 'Óculos divertidos'],
+  ['item_cap', 'Gorra deportiva', 'Sport cap', 'Boné esportivo'],
+  ['item_bow', 'Moño colorido', 'Colorful bow', 'Laço colorido'],
+  ['item_headphones', 'Audífonos musicales', 'Music headphones', 'Fones musicais'],
+  ['item_scarf', 'Bufanda abrigada', 'Cozy scarf', 'Cachecol quentinho'],
+  ['item_backpack', 'Mochila exploradora', 'Explorer backpack', 'Mochila exploradora'],
+  ['item_flower', 'Flor alegre', 'Happy flower', 'Flor alegre'],
+  ['item_antenna', 'Brillo espacial', 'Space sparkle', 'Brilho espacial'],
+  ['item_space', 'Fondo espacial', 'Space background', 'Fundo espacial'],
+  ['item_candy', 'Fondo de dulces', 'Candy background', 'Fundo de doces'],
+  ['item_valley', 'Fondo del valle', 'Valley background', 'Fundo do vale'],
+  ['item_forest', 'Fondo de bosque', 'Forest background', 'Fundo de floresta'],
+  ['item_ocean', 'Fondo del océano', 'Ocean background', 'Fundo do oceano'],
+  ['item_rainbow', 'Fondo arcoíris', 'Rainbow background', 'Fundo de arco-íris'],
   ['talk', 'Háblame…', 'Talk to me…', 'Fale comigo…'],
   ['hi', '¡Hola {n}! Soy {c}, ¡qué alegría verte!|¡Qué bueno verte, {n}! ¿Jugamos?|¡Hola, {n}! Hoy vamos a aprender cosas increíbles.',
     "Hello {n}! I'm {c}, so happy to see you!|Great to see you, {n}! Shall we play?|Hi {n}! Today we'll learn amazing things.",
@@ -1036,6 +1062,113 @@ for (const lang of Object.keys(settingsTranslations) as Lang[]) {
 for (const lang of LANGS.map((item) => item.id)) {
   Object.assign(D[lang], contextualActivityTranslations[lang])
   Object.assign(D[lang], childFriendlyTranslations[lang])
+}
+
+const localCompanionTranslations: Record<Lang, Record<string, string>> = {
+  es: {
+    settings_ai: 'Acompañante virtual', settings_ai_desc: 'Te ayuda a explorar los mundos y actividades de AprendeKids.',
+    settings_ai_ready: 'El acompañante está disponible.', settings_ai_setup: 'El acompañante está desactivado por ahora. Pide ayuda a una persona adulta.',
+    settings_api_offline: 'No se pudo conectar con el servidor de AprendeKids.', settings_ai_toggle: 'Permitir el acompañante en este perfil',
+    settings_ai_privacy: 'El acompañante responde sobre los mundos y juegos de AprendeKids. Los mensajes no se guardan como historial.',
+    chat_ai_off: 'El acompañante está bloqueado en este perfil. Pide a una persona adulta que lo active en Ajustes.',
+    chat_local: 'Acompañante educativo de AprendeKids',
+    chat_notice: 'Pregúntame sobre letras, lectura, números, dinosaurios y juegos. No compartas datos personales.',
+    chat_ask_adult: 'El acompañante no está activado. Pide a una persona adulta que lo revise.'
+  },
+  en: {
+    settings_ai: 'Virtual companion', settings_ai_desc: 'Helps you explore AprendeKids worlds and activities.',
+    settings_ai_ready: 'The companion is available.', settings_ai_setup: 'The companion is turned off for now. Ask an adult for help.',
+    settings_api_offline: 'Could not connect to the AprendeKids server.', settings_ai_toggle: 'Allow the companion for this profile',
+    settings_ai_privacy: 'The companion answers about AprendeKids worlds and games. Messages are not saved as chat history.',
+    chat_ai_off: 'The companion is locked for this profile. Ask a grown-up to enable it in Settings.',
+    chat_local: 'Your AprendeKids learning buddy',
+    chat_notice: 'Ask me about letters, reading, numbers, dinosaurs, and games. Do not share personal information.',
+    chat_ask_adult: 'The companion is not enabled. Ask a grown-up to check it.'
+  },
+  pt: {
+    settings_ai: 'Companheiro virtual', settings_ai_desc: 'Ajuda você a explorar os mundos e atividades do AprendeKids.',
+    settings_ai_ready: 'O companheiro está disponível.', settings_ai_setup: 'O companheiro está desativado por enquanto. Peça ajuda a um adulto.',
+    settings_api_offline: 'Não foi possível conectar ao servidor AprendeKids.', settings_ai_toggle: 'Permitir o companheiro neste perfil',
+    settings_ai_privacy: 'O companheiro responde sobre os mundos e jogos do AprendeKids. As mensagens não são salvas como histórico.',
+    chat_ai_off: 'O companheiro está bloqueado neste perfil. Peça a um adulto para ativá-lo nas Configurações.',
+    chat_local: 'Companheiro educativo do AprendeKids',
+    chat_notice: 'Pergunte sobre letras, leitura, números, dinossauros e jogos. Não compartilhe dados pessoais.',
+    chat_ask_adult: 'O companheiro não está ativado. Peça a um adulto para verificar.'
+  },
+  fr: {
+    settings_ai: 'Compagnon virtuel', settings_ai_desc: 'T’aide à explorer les mondes et les activités d’AprendeKids.',
+    settings_ai_ready: 'Le compagnon est disponible.', settings_ai_setup: 'Le compagnon est désactivé pour le moment. Demande l’aide d’un adulte.',
+    settings_api_offline: 'Impossible de joindre le serveur AprendeKids.', settings_ai_toggle: 'Autoriser le compagnon pour ce profil',
+    settings_ai_privacy: 'Le compagnon répond sur les mondes et les jeux d’AprendeKids. Les messages ne sont pas conservés.',
+    chat_ai_off: 'Le compagnon est verrouillé pour ce profil. Demande à un adulte de l’activer dans les réglages.',
+    chat_local: 'Ton compagnon éducatif AprendeKids',
+    chat_notice: 'Pose-moi des questions sur les lettres, la lecture, les nombres, les dinosaures et les jeux. Ne partage pas de données personnelles.',
+    chat_ask_adult: 'Le compagnon n’est pas activé. Demande à un adulte de vérifier.'
+  },
+  de: {
+    settings_ai: 'Virtueller Begleiter', settings_ai_desc: 'Hilft dir, die Welten und Aktivitäten von AprendeKids zu entdecken.',
+    settings_ai_ready: 'Der Begleiter ist verfügbar.', settings_ai_setup: 'Der Begleiter ist derzeit ausgeschaltet. Bitte eine erwachsene Person um Hilfe.',
+    settings_api_offline: 'Der AprendeKids-Server ist nicht erreichbar.', settings_ai_toggle: 'Begleiter für dieses Profil erlauben',
+    settings_ai_privacy: 'Der Begleiter antwortet zu den Welten und Spielen von AprendeKids. Nachrichten werden nicht als Chatverlauf gespeichert.',
+    chat_ai_off: 'Der Begleiter ist für dieses Profil gesperrt. Bitte eine erwachsene Person, ihn einzuschalten.',
+    chat_local: 'Dein AprendeKids-Lernbegleiter',
+    chat_notice: 'Frag mich nach Buchstaben, Lesen, Zahlen, Dinosauriern und Spielen. Teile keine persönlichen Daten.',
+    chat_ask_adult: 'Der Begleiter ist nicht eingeschaltet. Bitte eine erwachsene Person, dies zu prüfen.'
+  },
+  zh: {
+    settings_ai: '虚拟伙伴', settings_ai_desc: '帮助你探索 AprendeKids 的世界和活动。',
+    settings_ai_ready: '伙伴可以使用了。', settings_ai_setup: '伙伴暂时关闭。请向大人寻求帮助。',
+    settings_api_offline: '无法连接 AprendeKids 服务器。', settings_ai_toggle: '允许此档案使用伙伴',
+    settings_ai_privacy: '伙伴会回答 AprendeKids 世界和游戏相关的问题。消息不会保存为聊天记录。',
+    chat_ai_off: '此档案的伙伴已锁定。请让大人在设置中启用。',
+    chat_local: 'AprendeKids 学习伙伴',
+    chat_notice: '可以问我字母、阅读、数字、恐龙和游戏的问题。不要分享个人信息。',
+    chat_ask_adult: '伙伴尚未启用。请让大人检查设置。'
+  },
+  hi: {
+    settings_ai: 'वर्चुअल साथी', settings_ai_desc: 'AprendeKids की दुनिया और गतिविधियों को जानने में मदद करता है।',
+    settings_ai_ready: 'साथी उपलब्ध है।', settings_ai_setup: 'साथी अभी बंद है। किसी बड़े से मदद माँगें।',
+    settings_api_offline: 'AprendeKids सर्वर से संपर्क नहीं हो सका।', settings_ai_toggle: 'इस प्रोफ़ाइल के लिए साथी की अनुमति दें',
+    settings_ai_privacy: 'साथी AprendeKids की दुनिया और खेलों के बारे में जवाब देता है। संदेश चैट इतिहास के रूप में सहेजे नहीं जाते।',
+    chat_ai_off: 'इस प्रोफ़ाइल में साथी लॉक है। किसी बड़े से सेटिंग में चालू करने को कहें।',
+    chat_local: 'AprendeKids सीखने का साथी',
+    chat_notice: 'अक्षरों, पढ़ने, संख्याओं, डायनासोर और खेलों के बारे में पूछें। निजी जानकारी साझा न करें।',
+    chat_ask_adult: 'साथी चालू नहीं है। किसी बड़े से सेटिंग जाँचने को कहें।'
+  },
+  ar: {
+    settings_ai: 'الرفيق الافتراضي', settings_ai_desc: 'يساعدك على استكشاف عوالم وأنشطة AprendeKids.',
+    settings_ai_ready: 'الرفيق متاح.', settings_ai_setup: 'الرفيق متوقف الآن. اطلب المساعدة من شخص بالغ.',
+    settings_api_offline: 'تعذّر الاتصال بخادم AprendeKids.', settings_ai_toggle: 'السماح بالرفيق لهذا الملف',
+    settings_ai_privacy: 'يجيب الرفيق عن عوالم وألعاب AprendeKids. لا تُحفظ الرسائل كسجل محادثة.',
+    chat_ai_off: 'الرفيق مقفل لهذا الملف. اطلب من شخص بالغ تفعيله في الإعدادات.',
+    chat_local: 'رفيق AprendeKids للتعلّم',
+    chat_notice: 'اسألني عن الحروف والقراءة والأرقام والديناصورات والألعاب. لا تشارك معلوماتك الشخصية.',
+    chat_ask_adult: 'الرفيق غير مفعّل. اطلب من شخص بالغ مراجعة الإعدادات.'
+  },
+  ja: {
+    settings_ai: 'バーチャルおともだち', settings_ai_desc: 'AprendeKidsの世界やアクティビティを楽しむお手伝いをします。',
+    settings_ai_ready: 'おともだちは利用できます。', settings_ai_setup: 'おともだちは今オフです。大人に相談してください。',
+    settings_api_offline: 'AprendeKidsサーバーに接続できません。', settings_ai_toggle: 'このプロフィールでおともだちを許可する',
+    settings_ai_privacy: 'おともだちはAprendeKidsの世界やゲームについて答えます。メッセージは会話履歴として保存されません。',
+    chat_ai_off: 'このプロフィールではおともだちがロックされています。大人に設定から有効にしてもらってね。',
+    chat_local: 'AprendeKidsの学習おともだち',
+    chat_notice: '文字、読書、数字、恐竜、ゲームについて聞いてね。個人情報は教えないでね。',
+    chat_ask_adult: 'おともだちはオフです。大人に設定を確認してもらってね。'
+  },
+  ko: {
+    settings_ai: '가상 동반자', settings_ai_desc: 'AprendeKids의 세계와 활동을 탐험하도록 도와줘요.',
+    settings_ai_ready: '동반자를 사용할 수 있어요.', settings_ai_setup: '동반자가 지금 꺼져 있어요. 어른에게 도움을 요청하세요.',
+    settings_api_offline: 'AprendeKids 서버에 연결할 수 없습니다.', settings_ai_toggle: '이 프로필에서 동반자 허용',
+    settings_ai_privacy: '동반자는 AprendeKids의 세계와 게임에 관해 답해요. 메시지는 대화 기록으로 저장되지 않아요.',
+    chat_ai_off: '이 프로필에서 동반자가 잠겨 있어요. 어른에게 설정에서 켜 달라고 하세요.',
+    chat_local: 'AprendeKids 학습 동반자',
+    chat_notice: '글자, 읽기, 숫자, 공룡, 게임에 대해 물어봐요. 개인정보를 알려주지 마세요.',
+    chat_ask_adult: '동반자가 켜져 있지 않아요. 어른에게 설정을 확인해 달라고 하세요.'
+  }
+}
+
+for (const lang of LANGS.map((item) => item.id)) {
+  Object.assign(D[lang], localCompanionTranslations[lang])
 }
 
 type Vars = Record<string, string>
