@@ -1,13 +1,13 @@
 {
   "planHash": "5bd60d6ce8365a8a3775910206c5aded73cbc968c7ce317ef31f7c6611815909",
   "phase": "standalone",
-  "recordedAtUtc": "2026-11-17T01:45:30.0027547Z",
-  "retryCount": 2,
+  "recordedAtUtc": "2026-11-18T02:20:55.8386835Z",
+  "retryCount": 1,
   "resetBaseline": false,
   "complete": true,
   "result": {
     "setupSucceeded": true,
-    "setupDurationMs": 119369,
+    "setupDurationMs": 64039,
     "setupFailureOutput": null,
     "assertions": [
       {
@@ -20,7 +20,7 @@
         "skippedReason": null,
         "exitCode": 0,
         "outputSample": "\r\n\u003E aprendekids@1.0.0 typecheck\r\n\u003E tsc --noEmit --project frontend/tsconfig.json\r\n\r\n",
-        "durationMs": 12353
+        "durationMs": 8591
       },
       {
         "name": "tests-pass",
@@ -31,13 +31,13 @@
         "skipped": false,
         "skippedReason": null,
         "exitCode": 0,
-        "outputSample": "\r\n\u003E aprendekids@1.0.0 test\r\n\u003E vitest run\r\n\r\n\r\n RUN  v4.1.12 C:/Users/javie/AprendeKids\r\n\r\n\r\n Test Files  3 passed (3)\r\n      Tests  16 passed (16)\r\n   Start at  20:44:56\r\n   Duration  1.53s (transform 778ms, setup 0ms, import 1.00s, tests 218ms, environment 1ms)\r\n\r\n",
-        "durationMs": 4032,
+        "outputSample": "\r\n\u003E aprendekids@1.0.0 test\r\n\u003E vitest run\r\n\r\n\r\n RUN  v4.1.12 C:/Users/javie/AprendeKids\r\n\r\n\r\n Test Files  4 passed (4)\r\n      Tests  21 passed (21)\r\n   Start at  21:20:31\r\n   Duration  1.95s (transform 638ms, setup 0ms, import 921ms, tests 135ms, environment 20ms)\r\n\r\n",
+        "durationMs": 3973,
         "testResults": {
           "testFramework": "vitest",
           "runnerDetectedFrom": "package_json",
-          "testsTotal": 16,
-          "testsPassed": 16,
+          "testsTotal": 21,
+          "testsPassed": 21,
           "testsFailed": 0,
           "testsSkipped": 0,
           "parseFailed": false
@@ -52,8 +52,8 @@
         "skipped": false,
         "skippedReason": null,
         "exitCode": 0,
-        "outputSample": "\r\n\u003E aprendekids@1.0.0 build\r\n\u003E npm run typecheck \u0026\u0026 vite build --config frontend/vite.config.ts \u0026\u0026 npm run build:api\r\n\r\n\r\n\u003E aprendekids@1.0.0 typecheck\r\n\u003E tsc --noEmit --project frontend/tsconfig.json\r\n\r\n\u001B[36mvite v8.3.8 \u001B[32mbuilding client environment for production...\u001B[36m\u001B[39m\r\ntransforming...\r\n\u2713 1817 modules transformed.\r\nrendering chunks...\r\ncomputing gzip size...\r\nfrontend/dist/index.html                   0.82 kB \u2502 gzip:   0.50 kB\r\nfrontend/dist/assets/index-tZ3NDWXz.css   55.31 kB \u2502 gzip:   9.38 kB\r\nfrontend/dist/assets/index-uzGmS9iw.js   392.38 kB \u2502 gzip: 130.46 kB\r\n\r\n\u001B[32m\u2713 built in 1.94s\u001B[39m\r\n\r\n\u003E aprendekids@1.0.0 build:api\r\n\u003E tsc --project backend/tsconfig.json\r\n\r\n",
-        "durationMs": 27925
+        "outputSample": "\r\n\u003E aprendekids@1.0.0 build\r\n\u003E npm run typecheck \u0026\u0026 vite build --config frontend/vite.config.ts \u0026\u0026 npm run build:api\r\n\r\n\r\n\u003E aprendekids@1.0.0 typecheck\r\n\u003E tsc --noEmit --project frontend/tsconfig.json\r\n\r\n\u001B[36mvite v8.3.8 \u001B[32mbuilding client environment for production...\u001B[36m\u001B[39m\r\ntransforming...\r\n\u2713 1819 modules transformed.\r\nrendering chunks...\r\ncomputing gzip size...\r\nfrontend/dist/index.html                   0.82 kB \u2502 gzip:   0.51 kB\r\nfrontend/dist/assets/index-ClSQ6IYY.css   59.36 kB \u2502 gzip:   9.70 kB\r\nfrontend/dist/assets/index-DvN_5JW7.js   431.96 kB \u2502 gzip: 145.75 kB\r\n\r\n\u001B[32m\u2713 built in 1.27s\u001B[39m\r\n\r\n\u003E aprendekids@1.0.0 build:api\r\n\u003E tsc --project backend/tsconfig.json\r\n\r\n",
+        "durationMs": 19908
       },
       {
         "name": "home-page-200",
@@ -64,8 +64,8 @@
         "skipped": false,
         "skippedReason": null,
         "exitCode": null,
-        "outputSample": "HTTP 200\n\u003C!doctype html\u003E\r\n\u003Chtml lang=\u0022es\u0022\u003E\r\n  \u003Chead\u003E\n    \u003Cscript type=\u0022module\u0022\u003Eimport { injectIntoGlobalHook } from \u0022/@react-refresh\u0022;\ninjectIntoGlobalHook(window);\nwindow.$RefreshReg$ = () =\u003E {};\nwindow.$RefreshSig$ = () =\u003E (type) =\u003E type;\u003C/script\u003E\n\n    \u003Cscript type=\u0022module\u0022 src=\u0022/@vite/client\u0022\u003E\u003C/script\u003E\n\r\n    \u003Cmeta charset=\u0022UTF-8\u0022 /\u003E\r\n    \u003Clink rel=\u0022icon\u0022 type=\u0022image/svg\u002Bxml\u0022 href=\u0022data:image/svg\u002Bxml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E\uD83E\uDD96%3C/text%3E%3C/svg%3E\u0022 /\u003E\r\n    \u003Cmeta name=\u0022viewport\u0022 content=\u0022width=device-width, initial-scale=1.0\u0022 /\u003E\r\n    \u003Cmeta name=\u0022theme-color\u0022 content=\u0022#7dd3fc\u0022 /\u003E\r\n    \u003Cmeta name=\u0022description\u0022 content=\u0022Aprende letras, palabras y n\u00FAmeros jugando con tus amigos de AprendeKids.\u0022 /\u003E\r\n    \u003Ctitle\u003EAprendeKids - Aplicaci\u00F3n de Aprendizaje Infantil\u003C/title\u003E\r\n  \u003C/head\u003E\r\n  \u003Cbody\u003E\r\n    \u003Cdiv id=\u0022root\u0022\u003E\u003C/div\u003E\r\n    \u003Cscript type=\u0022module\u0022 src=\u0022/src/main.tsx\u0022\u003E\u003C/script\u003E\r\n  \u003C/body\u003E\r\n\u003C/html\u003E\r\n\n--- server output ---\n\r\n\u003E aprendekids@1.0.0 dev\r\n\u003E vite --config frontend/vite.config.ts --host 127.0.0.1 --port 5173 --strictPort\r\n\r\n\r\n  \u001B[32m\u001B[1mVITE\u001B[22m v8.3.8\u001B[39m  \u001B[2mready in \u001B[0m\u001B[1m1181\u001B[22m\u001B[2m\u001B[0m ms\u001B[22m\r\n\r\n  \u001B[32m\u279C\u001B[39m  \u001B[1mLocal\u001B[22m:   \u001B[36mhttp://127.0.0.1:\u001B[1m5173\u001B[22m/\u001B[39m\r\n",
-        "durationMs": 3638
+        "outputSample": "HTTP 200\n\u003C!doctype html\u003E\r\n\u003Chtml lang=\u0022es\u0022\u003E\r\n  \u003Chead\u003E\n    \u003Cscript type=\u0022module\u0022\u003Eimport { injectIntoGlobalHook } from \u0022/@react-refresh\u0022;\ninjectIntoGlobalHook(window);\nwindow.$RefreshReg$ = () =\u003E {};\nwindow.$RefreshSig$ = () =\u003E (type) =\u003E type;\u003C/script\u003E\n\n    \u003Cscript type=\u0022module\u0022 src=\u0022/@vite/client\u0022\u003E\u003C/script\u003E\n\r\n    \u003Cmeta charset=\u0022UTF-8\u0022 /\u003E\r\n    \u003Clink rel=\u0022icon\u0022 type=\u0022image/svg\u002Bxml\u0022 href=\u0022data:image/svg\u002Bxml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E\uD83E\uDD96%3C/text%3E%3C/svg%3E\u0022 /\u003E\r\n    \u003Cmeta name=\u0022viewport\u0022 content=\u0022width=device-width, initial-scale=1.0\u0022 /\u003E\r\n    \u003Cmeta name=\u0022theme-color\u0022 content=\u0022#7dd3fc\u0022 /\u003E\r\n    \u003Cmeta name=\u0022description\u0022 content=\u0022Aprende letras, palabras y n\u00FAmeros jugando con tus amigos de AprendeKids.\u0022 /\u003E\r\n    \u003Ctitle\u003EAprendeKids - Aplicaci\u00F3n de Aprendizaje Infantil\u003C/title\u003E\r\n  \u003C/head\u003E\r\n  \u003Cbody\u003E\r\n    \u003Cdiv id=\u0022root\u0022\u003E\u003C/div\u003E\r\n    \u003Cscript type=\u0022module\u0022 src=\u0022/src/main.tsx\u0022\u003E\u003C/script\u003E\r\n  \u003C/body\u003E\r\n\u003C/html\u003E\r\n\n--- server output ---\n\r\n\u003E aprendekids@1.0.0 dev\r\n\u003E vite --config frontend/vite.config.ts --host 127.0.0.1 --port 5173 --strictPort\r\n\r\n\r\n  \u001B[32m\u001B[1mVITE\u001B[22m v8.3.8\u001B[39m  \u001B[2mready in \u001B[0m\u001B[1m935\u001B[22m\u001B[2m\u001B[0m ms\u001B[22m\r\n\r\n  \u001B[32m\u279C\u001B[39m  \u001B[1mLocal\u001B[22m:   \u001B[36mhttp://127.0.0.1:\u001B[1m5173\u001B[22m/\u001B[39m\r\n",
+        "durationMs": 2581
       }
     ],
     "executions": [
